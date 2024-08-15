@@ -1,12 +1,15 @@
-const express = require('express');
-const cors = require('cors');
-const routes = require('./routes');
-const errorMiddleware = require('./middleware/error.middleware');
-const mongoose = require('mongoose');
+import express, { Application } from 'express';
+import cors from 'cors';
+import routes from './routes';
+import errorMiddleware from './middleware/error.middleware';
+import mongoose from 'mongoose';
+import { config } from 'dotenv';
 
-require('dotenv').config();
+// Load environment variables from .env file
+config();
 
-mongoose.connect(process.env.MONGODB_URI, {
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI as string, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
@@ -15,7 +18,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('MongoDB connection error:', err));
 
-const app = express();
+const app: Application = express();
 
 app.use(cors());
 app.use(express.json());
@@ -29,4 +32,4 @@ app.use(errorMiddleware);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-module.exports = app;
+export default app;

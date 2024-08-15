@@ -1,8 +1,13 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/user.model');
-const logger = require('../utils/logger');
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
+import User, { IUser } from '../models/user.model';
+import logger from '../utils/logger';
 
-const authenticateJWT = async (req, res, next) => {
+interface AuthenticatedRequest extends Request {
+  user?: Omit<IUser, 'password'>;
+}
+
+const authenticateJWT = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response | void> => {
   try {
     const authHeader = req.header('Authorization');
     if (!authHeader) {
@@ -14,16 +19,16 @@ const authenticateJWT = async (req, res, next) => {
       return res.status(401).json({ error: 'Access denied. Invalid token format.' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id).select('-password');
-    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+    const user = await User.findById(decoded.id).select('-password').exec();
+
     if (!user) {
       return res.status(401).json({ error: 'Invalid token. User not found.' });
     }
 
     req.user = user;
     next();
-  } catch (error) {
+  } catch (error: any) {
     logger.error('Authentication error:', error);
     if (error.name === 'JsonWebTokenError') {
       return res.status(401).json({ error: 'Invalid token.' });
@@ -35,4 +40,4 @@ const authenticateJWT = async (req, res, next) => {
   }
 };
 
-module.exports = authenticateJWT;
+export default authenticateJWT;

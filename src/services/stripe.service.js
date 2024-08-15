@@ -1,5 +1,5 @@
 const stripePackage = require('stripe');
-const config = require('../config');
+const config = require('../config/config');
 
 class StripeService {
   constructor() {

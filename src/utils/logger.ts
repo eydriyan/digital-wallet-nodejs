@@ -1,5 +1,6 @@
-const winston = require('winston');
+import winston from 'winston';
 
+// Define the logger
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: winston.format.combine(
@@ -17,6 +18,7 @@ const logger = winston.createLogger({
   ]
 });
 
+// Add console transport in non-production environments
 if (process.env.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
     format: winston.format.combine(
@@ -26,4 +28,4 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
-module.exports = logger;
+export default logger;
