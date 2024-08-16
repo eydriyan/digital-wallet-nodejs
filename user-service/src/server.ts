@@ -9,12 +9,7 @@ import { config } from 'dotenv';
 config();
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI as string, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false
-})
+mongoose.connect(process.env.MONGODB_URI as string)
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('MongoDB connection error:', err));
 

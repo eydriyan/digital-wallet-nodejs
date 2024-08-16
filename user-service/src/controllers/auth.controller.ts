@@ -83,6 +83,8 @@ export const login = async (req: Request<{}, {}, LoginRequestBody>, res: Respons
   }
 };
 
+
+// Logout User
 export const logout = async (req: Request, res: Response) => {
   try {
       const authHeader = req.headers['authorization'];
@@ -97,7 +99,7 @@ export const logout = async (req: Request, res: Response) => {
 
       // Add the token to the blacklist
       const decoded = jwt.verify(token, config.jwtSecret as string);
-      const expirationDate = new Date((decoded as any).exp * 1000); // Convert exp to Date
+      const expirationDate = new Date((decoded as any).exp * 1000);
 
       await Token.create({
           token,

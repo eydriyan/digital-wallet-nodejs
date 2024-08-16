@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import User from '../models/user.model'; // Import your User model
+import User from '../models/user.model';
 import logger from '../utils/logger';
 
 // Get a specific user by ID
 export const getUser = async (req: Request, res: Response) => {
     try {
-        const user = await User.findById(req.params.id).select('-password');
+        const user = await User.findById(req.params.id).select('-password -__v');
         if (!user) return res.status(404).json({ error: 'User not found' });
         res.json(user);
     } catch (error) {
@@ -17,7 +17,7 @@ export const getUser = async (req: Request, res: Response) => {
 // Get all users
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
-        const users = await User.find().select('-password');
+        const users = await User.find().select('-password -__v');
         res.json(users);
     } catch (error) {
         logger.error('Error fetching users:', error);
@@ -29,7 +29,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const updatedUser = await User.findByIdAndUpdate(id, req.body, { new: true }).select('-password');
+        const updatedUser = await User.findByIdAndUpdate(id, req.body, { new: true }).select('-password -__v');
         if (!updatedUser) return res.status(404).json({ error: 'User not found' });
         res.json(updatedUser);
     } catch (error) {

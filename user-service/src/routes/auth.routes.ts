@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { register, login, logout } from '../controllers/auth.controller';
 import authenticateJWT from '../middleware/auth.middleware';
-import checkTokenBlacklist from '../middleware/tokenBlacklist.middleware';
 
 const router = Router();
 
